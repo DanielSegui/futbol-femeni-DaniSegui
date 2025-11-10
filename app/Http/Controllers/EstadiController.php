@@ -36,7 +36,7 @@ class EstadiController extends Controller
             'nom'    => 'required|min:3',
             'ciutat' => 'required|min:2',
             'capacitat' => 'required|integer|min:0',
-            'equip_principal' => 'required|min:3',
+            'equip' => 'required|min:3',
         ]);
 
         $estadis = Session::get('estadis', $this->estadis);

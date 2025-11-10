@@ -22,7 +22,7 @@ class PartitController extends Controller
     {
         $partits = Session::get('partits', $this->partits);
         abort_if(!isset($partits[$id]), 404);
-        $equip = $partits[$id];
+        $partit = $partits[$id];
         return view('partits.show', compact('partit'));
     }
 
