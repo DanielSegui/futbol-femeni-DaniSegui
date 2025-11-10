@@ -10,7 +10,6 @@
 
 <p class="mb-4">
   <a href="{{ route('equips.create') }}" class="bg-blue-600 text-white px-3 py-2 rounded">Nou equip</a>
-   <a href="{{ route('estadis.index') }}" class="bg-green-600 text-white px-3 py-2 rounded ml-2">Veure estadis</a>
 </p>
 
 <table class="w-full border-collapse border border-gray-300">

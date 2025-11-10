@@ -1,8 +1,8 @@
 @extends('layouts.app')
-@section('title', 'Guia d’Estadis')
+@section('title', "Guia d'estadis")
 
 @section('content')
-<h1 class="text-3xl font-bold text-blue-800 mb-6">Estadis de Futbol Femení</h1>
+<h1 class="text-3xl font-bold text-blue-800 mb-6">Guia d'estadis</h1>
 
 @if (session('success'))
   <div class="bg-green-100 text-green-700 p-2 mb-4">{{ session('success') }}</div>
@@ -18,7 +18,7 @@
     <th class="border border-gray-300 p-2">Nom</th>
     <th class="border border-gray-300 p-2">Ciutat</th>
     <th class="border border-gray-300 p-2">Capacitat</th>
-    <th class="border border-gray-300 p-2">Equip principal</th>
+    <th class="border border-gray-300 p-2">Equip</th>
   </tr>
   </thead>
   <tbody>
@@ -29,7 +29,7 @@
       </td>
       <td class="border border-gray-300 p-2">{{ $estadi['ciutat'] }}</td>
       <td class="border border-gray-300 p-2">{{ $estadi['capacitat'] }}</td>
-      <td class="border border-gray-300 p-2">{{ $estadi['equip_principal'] }}</td>
+      <td class="border border-gray-300 p-2">{{ $estadi['equip'] }}</td>
     </tr>
   @endforeach
   </tbody>

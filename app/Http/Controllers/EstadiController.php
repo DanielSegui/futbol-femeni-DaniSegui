@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
-class EstadiController extends Controller 
+class EstadiController extends Controller
 {
-     public $estadis = [
-        ['nom' => 'Estadi Johan Cruyff', 'ciutat' => 'Sant Joan Despí', 'capacitat' => 6000, 'equip_principal' => 'FC Barcelona Femení'],
-        ['nom' => 'Centro Deportivo Wanda Alcalá de Henares',  'ciutat' => 'Alcalá de Henares',  'capacitat' => 2800, 'equip_principal' => 'Atlètic de Madrid Femení'],
-        ['nom' => 'Estadio Alfredo Di Stèfano', 'ciutat' => 'Madrid', 'capacitat' => 6000, 'equip_principal' => 'Real Madrid Femení'],
+    public $estadis = [
+        ['nom' => 'Estadi Johan Cruyff','ciutat' => 'Sant Joan Despí','capacitat' => 6000,'equip' => 'FC Barcelona Femení',],
+        ['nom' => 'Centro Deportivo Wanda Alcalá de Henares','ciutat' => 'Alcalá de Henares','capacitat' => 2800,'equip' => 'Atlètic de Madrid Femení',],
+        ['nom' => 'Estadio Alfredo Di Stéfano','ciutat' => 'Madrid','capacitat' => 6000,'equip' => 'Real Madrid Femení',],
     ];
+    
 
     public function index()
     {
@@ -23,7 +24,6 @@ class EstadiController extends Controller
     {
         $estadis = Session::get('estadis', $this->estadis);
         abort_if(!isset($estadis[$id]), 404);
-        
         $estadi = $estadis[$id];
         return view('estadis.show', compact('estadi'));
     }

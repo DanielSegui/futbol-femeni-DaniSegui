@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+
 class JugadoraController extends Controller 
 {
      public $jugadores = [
@@ -31,7 +34,7 @@ class JugadoraController extends Controller
         $validated = $request->validate([
             'nom'      => 'required|min:3',
             'equip'    => 'required|min:2',
-            'posicio'  => 'required|in:Portera, Defensa, Migcampista, Davantera',
+            'posicio'  => 'required|in:Portera,Defensa,Migcampista,Davantera',
         ]);
 
         $jugadores = Session::get('jugadores', $this->jugadores);

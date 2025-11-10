@@ -1,12 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\PartitController;
+namespace App\Http\Controllers;
 
-class PartitController extends Controller 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+
+class PartitController extends Controller
 {
-     public $partits = [
-        ['local' => 'Barça Femení', 'visitant' => 'Atlètic de Madrid', 'data' => 2024-11-30, 'resultat' => null],
-        ['local' => 'Real Madrid Femení', 'visitant' => 'Barça Femení', 'data' => 2024-12-15, 'resultat' => '0-3'],
+    public $partits = [
+        ["local" => "Barça Femení","visitant" => "Atlètic de Madrid","data" => "2024-11-30","resultat" => ""],
+        ["local" => "Real Madrid Femení","visitant" => "Barça Femení","data" => "2024-12-15","resultat" => "0-3"]
     ];
 
     public function index()
@@ -19,7 +22,7 @@ class PartitController extends Controller
     {
         $partits = Session::get('partits', $this->partits);
         abort_if(!isset($partits[$id]), 404);
-        $partits = $partits[$id];
+        $equip = $partits[$id];
         return view('partits.show', compact('partit'));
     }
 
@@ -30,16 +33,16 @@ class PartitController extends Controller
         $validated = $request->validate([
             'local'    => 'required|min:2',
             'visitant' => 'required|min:2|different:local',
-            'data' => 'required|data_format:Y-m-d',
+            'data' => 'required|date_format:Y-m-d',
             'resultat' => ['nullable', 'regex:/^\d+-\d+$/'],
-        ], [
-            'resultat.regex' => 'El resultat ha de tenir el format X-Y (exemple: 2-1).',
+        ],[
+            'resultat.regex' => 'El resultat ha de tenir el format "X-Y" (per exemple, 2-1).',
         ]);
 
         $partits = Session::get('partits', $this->partits);
         $partits[] = $validated;
         Session::put('partits', $partits);
 
-        return redirect()->route('partits.index')->with('success', 'Partit afegit correctament!');
+        return redirect()->route('partits.index')->with('success', 'partit afegit correctament!');
     }
 }
