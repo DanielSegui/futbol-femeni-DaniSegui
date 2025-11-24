@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('estadis', function (Blueprint $table) {
+        Schema::create('equips', function (Blueprint $table) {
             $table->id();
-            $table->string('nom');         // nombre del estadio
-            $table->integer('capacitat');  // capacidad del estadio
+            $table->string('nom')->unique();
+            $table->foreignId('estadi_id')->constrained();
+            $table->integer('titols')->default(0);
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('estadis');
+         Schema::dropIfExists('equips');
     }
 };
