@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('estadis', function (Blueprint $table) {
+        Schema::create('jugadores', function (Blueprint $table) {
             $table->id();
-            $table->string('nom')->unique();
-            $table->integer('capacitat');
+            $table->foreignId('equip_id')->constrained('equips')->cascadeOnDelete();
+            $table->date('data_naixement');
+            $table->integer('dorsal');
+            $table->string('foto')->nullable();
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('estadis');
+         Schema::dropIfExists('jugadores');
     }
 };

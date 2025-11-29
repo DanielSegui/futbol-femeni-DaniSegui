@@ -33,6 +33,25 @@ class Equip extends Model
         return $this->hasOne(User::class   );
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function jugadores(){
+        return $this->hasMany(Jugadora::class);
+    }
+    
+    /**
+    * @return \Illuminate\Database\Eloquent\Relations\HasMany
+    */
+    public function partitLocal(){
+        return $this->hasMany(Partit::class,'local_id');
+    }
 
+    /**
+    * @return \Illuminate\Database\Eloquent\Relations\HasMany
+    */
+    public function partitVisitant(){
+        return $this->hasMany(Partit::class,'visitant_id');
+    }
 
 }

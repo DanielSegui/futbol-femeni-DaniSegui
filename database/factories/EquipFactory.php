@@ -2,20 +2,27 @@
 
 namespace Database\Factories;
 
-use App\Models\Equip;
 use App\Models\Estadi;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Equip>
+ */
 class EquipFactory extends Factory
 {
-    protected $model = Equip::class;
-
-    public function definition()
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
     {
+
         return [
-            'nom' => $this->faker->unique()->company(),
-            'estadi_id' => Estadi::inRandomOrder()->first()->id,
-            'titols' => $this->faker->numberBetween(0,5),
+            'nom' => $this->faker->unique()->company,
+            'titols' => $this->faker->numberBetween(0, 50),
+            'estadi_id' =>  Estadi::factory(),
+            //'escut' => 'escuts/dummy.png',
         ];
     }
 }

@@ -3,4 +3,5 @@
 
 @section('content')
 <x-equip :nom="$equip['nom']" :estadi="$equip['estadi']" :titols="$equip['titols']"/>
+<x-jugadores :jugadores="$equip->jugadores" />
 @endsection

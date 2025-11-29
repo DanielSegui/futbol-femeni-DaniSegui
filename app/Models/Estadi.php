@@ -12,12 +12,21 @@ class Estadi extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nom', 'capacitat' ];
+    protected $fillable = ['nom', 'ciutat', 'capacitat' ];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function equips()
     {
         return $this->hasMany(Equip::class);
+    }
+
+    /**
+    * @return \Illuminate\Database\Eloquent\Relations\HasMany
+    */
+    public function partits()
+    {
+        return $this->hasMany(Partit::class, 'estadi_id');
     }
 }

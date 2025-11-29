@@ -8,6 +8,8 @@ use App\Http\Controllers\PartitController;
 
 Route::get('/', fn() => "Benvingut a la Guia d'Equips de Futbol Femení!");
 Route::resource('equips', EquipController::class);
-Route::resource('/estadis', EstadiController::class);
+
+Route::resource('estadis', EstadiController::class);
 Route::resource('jugadores', JugadoraController::class);
 Route::resource('partits', PartitController::class);
+?>
