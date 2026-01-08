@@ -12,7 +12,7 @@ class Estadi extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nom', 'ciutat', 'capacitat' ];
+    protected $fillable = ['nom', 'capacitat' ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -27,6 +27,6 @@ class Estadi extends Model
     */
     public function partits()
     {
-        return $this->hasMany(Partit::class, 'estadi_id');
+        return $this->hasMany(Partit::class,'estadi_id');
     }
 }

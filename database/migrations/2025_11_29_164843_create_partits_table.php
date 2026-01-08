@@ -18,7 +18,8 @@ return new class extends Migration
             $table->foreignId('estadi_id')->constrained('estadis');
             $table->date('data');
             $table->integer('jornada')->constrained();
-            $table->integer('gols')->default(0);
+            $table->integer('gols_local')->default(0);
+            $table->integer('gols_visitant')->default(0);
             $table->timestamps();
         });
     }

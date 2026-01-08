@@ -12,10 +12,12 @@ class Jugadora extends Model
 {
     use HasFactory;
 
+    protected $table = "jugadores";
+
     /**
      * @var string[]
      */
-    protected $fillable = ['equip_id', 'data_naixement', 'dorsal', 'foto' ];
+    protected $fillable = ['nom','equip_id', 'data_naixement', 'dorsal','foto','posicio' ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

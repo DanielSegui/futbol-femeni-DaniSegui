@@ -13,10 +13,13 @@ return new class extends Migration
     {
         Schema::create('jugadores', function (Blueprint $table) {
             $table->id();
+            $table->string('nom');
             $table->foreignId('equip_id')->constrained('equips')->cascadeOnDelete();
             $table->date('data_naixement');
             $table->integer('dorsal');
             $table->string('foto')->nullable();
+            $table->integer('gols')->default(0);
+            $table->string('posicio')->nullable();
             $table->timestamps();
         });
     }

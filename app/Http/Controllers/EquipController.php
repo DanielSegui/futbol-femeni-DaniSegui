@@ -30,7 +30,10 @@ class EquipController extends Controller {
 
     // GET /equips/{id}
     public function show(Equip $equip) {
-        return view('equips.show', compact('equip'));
+        return view('equips.show', [
+            'equip' => $equip,
+            'jugadores' => $equip->jugadores
+        ]);
     }
 
     // GET /equips/{id}/edit
@@ -39,13 +42,11 @@ class EquipController extends Controller {
     }
 
     // PUT /equips/{id}/edit
-    public function update(Request $request, Equip $equip) {
-        $this->servei->actualitzar($equip, $request->validated());
+    public function update(UpdateEquipRequest $request, Equip $equip) {
+        $this->servei->actualitzar($equip->id, $request->validated());
         return redirect()->route('equips.index')->with('ok', 'Equip actualitzat');
     }
-
-
-
+    
 
     // DELETE /equips/{id}
     public function destroy($id) {

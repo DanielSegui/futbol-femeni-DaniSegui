@@ -2,42 +2,50 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreEstadiRequest;
+use App\Http\Requests\UpdateEstadiRequest;
+use App\Services\EstadiService;
 use App\Models\Estadi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+class EstadiController extends Controller {
+    public function __construct(private EstadiService $servei) {}
 
-class EstadiController extends Controller
-{
-    public function index()
-    {
-        $estadis = Estadi::all();
-        return view('estadis.index', compact('estadis'));
+    // GET /estadis
+    public function index() {
+        return view('estadis.index', ['estadis' => $this->servei->llistar()]);
     }
 
-    public function show(Estadi $estadi)
-    {
+    // GET /estadis/create
+    public function create() {
+        $estadis = Estadi::all();
+        return view('estadis.create',compact('estadis'));
+    }
+    // POST /estadis
+    public function store(StoreEstadiRequest $request) {
+        $this->servei->guardar($request->validated());
+        return redirect()->route('estadis.index');
+    }
+
+    // GET /estadis/{id}
+    public function show(Estadi $estadi) {
         return view('estadis.show', compact('estadi'));
     }
 
-    public function create() { return view('estadis.create'); }
-
-    public function store(Request $request)
-    {
-        $estadi = new Estadi($request->validated());
-        $estadi->save();
-        return redirect()->route('estadis.index')->with('success', 'Estadi creat correctament!');
-    }
-
-    public function edit(Estadi $estadi){
+    // GET /estadis/{id}/edit
+    public function edit(Estadi $estadi) {
         return view('estadis.edit', compact('estadi'));
     }
 
-    public function update(Request $request, Estadi $estadi){
-        $estadi->update($request->validated());
-        return redirect()->route('estadis.index')->with('success', 'Estadi actualitzat correctament!');
+    // PUT /estadis/{id}/edit
+    public function update(Request $request, Estadi $estadi) {
+        $this->servei->actualitzar($estadi, $request->validated());
+        return redirect()->route('estadis.index')->with('ok', 'estadi actualitzat');
     }
 
-    public function destroy(Estadi $estadi){
-        $estadi->delete();
-        return redirect()->route('estadis.index')->with('success', 'Estadi eliminat correctament!');
+    // DELETE /estadis/{id}
+    public function destroy($id) {
+        $this->servei->eliminar($id);
+        return redirect()->route('estadis.index');
     }
 }

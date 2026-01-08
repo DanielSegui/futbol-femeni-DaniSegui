@@ -8,14 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Model PARTIT
  */
-class partit extends Model
+class Partit extends Model
 {
     use HasFactory;
 
     /**
      * @var string[]
      */
-    protected $fillable = ['local_id', 'visitant_id', 'estadi_id', 'data', 'jornada', 'gols'];
+    protected $fillable = ['local_id', 'visitante_id', 'estadi_id', 'data', 'jornada', 'gols_local','gols_visitant'];
     
     /**
     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -28,7 +28,7 @@ class partit extends Model
     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
     */
     public function equipVisitant(){
-        return $this->belongsTo(Equip::class,'visitant_id');
+        return $this->belongsTo(Equip::class,'visitante_id');
     }
 
     /**
