@@ -4,31 +4,28 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreatePartitsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::create('partits', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('local_id')->constrained('equips');
-            $table->foreignId('visitante_id')->constrained('equips');
-            $table->foreignId('estadi_id')->constrained('estadis');
+            $table->unsignedBigInteger('local_id');
+            $table->unsignedBigInteger('visitant_id');
+            $table->unsignedBigInteger('estadi_id')->nullable();
             $table->date('data');
-            $table->integer('jornada')->constrained();
-            $table->integer('gols_local')->default(0);
-            $table->integer('gols_visitant')->default(0);
+            $table->unsignedInteger('jornada')->nullable();
+            $table->string('resultat')->nullable(); // ex: "2-1"
             $table->timestamps();
+
+            $table->foreign('local_id')->references('id')->on('equips')->onDelete('cascade');
+            $table->foreign('visitant_id')->references('id')->on('equips')->onDelete('cascade');
+            $table->foreign('estadi_id')->references('id')->on('estadis')->onDelete('set null');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
-         Schema::dropIfExists('partits');
+        Schema::dropIfExists('partits');
     }
-};
+}

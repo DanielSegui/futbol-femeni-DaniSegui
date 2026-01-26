@@ -6,23 +6,18 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class EstadiRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return false;
+        return true; // canvia a true per poder enviar formularis
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            //
+            'nom' => 'required|string|max:255',
+            'ciutat' => 'required|string|max:255',
+            'capacitat' => 'required|integer|min:0',
+            'equip_principal_id' => 'nullable|exists:equips,id',
         ];
     }
 }

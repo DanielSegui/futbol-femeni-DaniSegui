@@ -2,24 +2,24 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Jugadora;
 use App\Models\Equip;
-use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class JugadoraFactory extends Factory
 {
-    protected $model = \App\Models\Jugadora::class;
+    protected $model = Jugadora::class;
 
-    public function definition()
+    public function definition(): array
     {
         return [
-            'nom' => $this->faker->name,
-            'equip_id' => Equip::inRandomOrder()->first()->id, // asigna aleatoriamente a un equipo existente
-            'data_naixement' => $this->faker->dateTimeBetween('-30 years', '-16 years')->format('Y-m-d'),
-            'dorsal' => $this->faker->numberBetween(1, 30),
-            'foto' => null,
-            'gols' => $this->faker->numberBetween(0, 50),
-            'posicio' => $this->faker->randomElement(['Portera', 'Defensa', 'Centrocampista', 'Delantera']),
+            'nom' => $this->faker->firstName(),
+            'cognoms' => $this->faker->lastName(),
+            'dorsal' => $this->faker->numberBetween(1, 99),
+            'data_naixement' => $this->faker->dateTimeBetween('-35 years', '-16 years'),
+            'foto' => 'default.png',
+            'posicio' => $this->faker->randomElement(['Davanter', 'Defensa', 'Porter', 'Migcampista']),
+            'equip_id' => Equip::inRandomOrder()->first()->id,
         ];
     }
 }

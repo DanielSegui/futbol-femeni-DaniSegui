@@ -1,32 +1,42 @@
 @extends('layouts.app')
-@section('title', 'Afegir nova jugadora')
 
 @section('content')
-<h1 class="text-2xl font-bold mb-4">Afegir nova jugadora</h1>
+<h2>Nova jugadora</h2>
 
-@if ($errors->any())
-  <div class="bg-red-100 text-red-700 p-2 mb-4">
-    <ul>
-      @foreach ($errors->all() as $error) <li>{{ $error }}</li> @endforeach
-    </ul>
-  </div>
-@endif
+<form action="{{ route('jugadores.store') }}" method="POST">
+    @csrf
 
-<form action="{{ route('jugadores.store') }}" method="POST" class="space-y-4">
-  @csrf
-  <div>
-    <label for="nom" class="block font-bold">Nom:</label>
-    <input type="text" name="nom" id="nom" value="{{ old('nom') }}" class="border p-2 w-full">
-  </div>
-  <div>
-    <label for="equip" class="block font-bold">Equip:</label>
-    <input type="text" name="equip" id="equip" value="{{ old('equip') }}" class="border p-2 w-full">
-  </div>
-  <div>
-    <label for="posicio" class="block font-bold">Posicio:</label>
-    <input type="text" name="posicio" id="posicio" value="{{ old('posicio') }}" class="border p-2 w-full">
-  </div>
-  <div>
-  <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Afegir</button>
+    <div class="mb-3">
+        <label for="nom" class="form-label">Nom</label>
+        <input type="text" name="nom" id="nom" class="form-control" value="{{ old('nom') }}">
+    </div>
+
+    <div class="mb-3">
+        <label for="cognoms" class="form-label">Cognoms</label>
+        <input type="text" name="cognoms" id="cognoms" class="form-control" value="{{ old('cognoms') }}">
+    </div>
+
+
+    <div class="mb-3">
+        <label for="equip_id" class="form-label">Equip</label>
+        <select name="equip_id" id="equip_id" class="form-control">
+            <option value="">-- Selecciona equip --</option>
+            @foreach($equips as $equip)
+            <option value="{{ $equip->id }}" @selected(old('equip_id')==$equip->id)>{{ $equip->nom }}</option>
+            @endforeach
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="posicio" class="form-label">Posició</label>
+        <select name="posicio" id="posicio" class="form-control">
+            <option value="">-- Selecciona posició --</option>
+            @foreach ($posicions as $pos)
+            <option value="{{ $pos }}" @selected(old('posicio')===$pos)>{{ $pos }}</option>
+            @endforeach
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
 </form>
 @endsection

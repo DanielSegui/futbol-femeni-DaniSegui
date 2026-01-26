@@ -4,26 +4,24 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateEstadisTable extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::create('estadis', function (Blueprint $table) {
             $table->id();
-            $table->string('nom')->unique();
-            $table->integer('capacitat');
+            $table->string('nom')->index();
+            $table->string('ciutat');
+            $table->unsignedInteger('capacitat')->default(0);
+            $table->unsignedBigInteger('equip_principal_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('equip_principal_id')->references('id')->on('equips')->onDelete('set null');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('estadis');
     }
-};
+}

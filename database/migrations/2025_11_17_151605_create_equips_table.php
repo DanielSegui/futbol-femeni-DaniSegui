@@ -4,27 +4,22 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateEquipsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::create('equips', function (Blueprint $table) {
             $table->id();
-            $table->string('nom')->unique();
-            $table->foreignId('estadi_id')->constrained();
-            $table->integer('titols')->default(0);
+            $table->string('nom')->index();
+            $table->string('ciutat')->nullable();
+            $table->string('lliga')->nullable();
+            $table->string('escut')->nullable(); // fitxer imatge opcional
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
-         Schema::dropIfExists('equips');
+        Schema::dropIfExists('equips');
     }
-};
+}

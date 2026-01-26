@@ -1,37 +1,38 @@
 @extends('layouts.app')
-@section('title', "Guia de Partits")
 
 @section('content')
-<h1 class="text-3xl font-bold text-blue-800 mb-6">Guia de Partits</h1>
+<h2>Partits</h2>
 
-@if (session('success'))
-  <div class="bg-green-100 text-green-700 p-2 mb-4">{{ session('success') }}</div>
-@endif
+<a href="{{ route('partits.create') }}" class="btn btn-primary mb-3">+ Nou partit</a>
 
-<p class="mb-4">
-  <a href="{{ route('partits.create') }}" class="bg-blue-600 text-white px-3 py-2 rounded">Nou Partit</a>
-</p>
-
-<table class="w-full border-collapse border border-gray-300">
-  <thead class="bg-gray-200">
-  <tr>
-    <th class="border border-gray-300 p-2">Local</th>
-    <th class="border border-gray-300 p-2">Visitant</th>
-    <th class="border border-gray-300 p-2">Data</th>
-    <th class="border border-gray-300 p-2">Resultat</th>  
-  </tr>
-  </thead>
-  <tbody>
-  @foreach($partits as $key => $partit)
-    <tr class="hover:bg-gray-100">
-      <td class="border border-gray-300 p-2">
-        <a href="{{ route('partits.show', $key) }}" class="text-blue-700 hover:underline">{{ $partit['local'] }}</a>
-      </td>
-      <td class="border border-gray-300 p-2">{{ $partit['visitant'] }}</td>
-      <td class="border border-gray-300 p-2">{{ $partit['data'] }}</td>
-      <td class="border border-gray-300 p-2">{{ $partit['resultat'] }}</td>
-    </tr>
-  @endforeach
-  </tbody>
+<table class="table table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Local</th>
+            <th>Visitant</th>
+            <th>Estadi</th>
+            <th>Data</th>
+            <th>Resultat</th>
+        </tr>
+    </thead>
+    <tbody>
+        @forelse ($partits as $partit)
+        <tr>
+            <td>
+                <x-equip-mini :nom="$partit->local->nom ?? '-'" />
+            </td>
+            <td>
+                <x-equip-mini :nom="$partit->visitant->nom ?? '-'" />
+            </td>
+            <td>{{ $partit->estadi->nom ?? '-' }}</td>
+            <td>{{ \Carbon\Carbon::parse($partit->data)->format('d/m/Y') }}</td>
+            <td>{{ $partit->resultat ?? '-' }}</td>
+        </tr>
+        @empty
+        <tr>
+            <td colspan="5">No hi ha partits.</td>
+        </tr>
+        @endforelse
+    </tbody>
 </table>
 @endsection

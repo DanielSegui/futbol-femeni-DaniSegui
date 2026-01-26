@@ -11,7 +11,7 @@ class JugadoraRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -22,12 +22,7 @@ class JugadoraRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nom'             => 'required|string|min:3',
-            'equip_id'        => 'required|integer|exists:equips,id',
-            'data_naixement'  => 'required|date|before:-16 years', 
-            'dorsal'          => 'required|integer|min:1',
-            'foto'            => 'nullable|image|mimes:png|max:2048',
-            'gols'            => 'required|integer|min:0',
+            //
         ];
     }
 }
