@@ -10,7 +10,7 @@ Route::get('/', function () {
     return redirect()->route('equips.index');
 });
 
-// ---------- EQUIPS (mini-guia base) ----------
+// ---------- EQUIPS ----------
 Route::get('/equips', [EquipController::class, 'index'])->name('equips.index');
 Route::get('/equips/create', [EquipController::class, 'create'])->name('equips.create');
 Route::post('/equips', [EquipController::class, 'store'])->name('equips.store');

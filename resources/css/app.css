@@ -1,14 +1,13 @@
-/* Cos principal */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #cd1515;
+    background-color: #000000;
     margin: 0;
     padding: 0;
 }
 
 /* Header */
 .topbar {
-    background-color: #3490dc;
+    background-color: #880000;
     color: white;
     padding: 1rem 2rem;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
@@ -51,15 +50,14 @@ table tr:nth-child(even) {
 .btn {
     display: inline-block;
     padding: 8px 16px;
-    background-color: #3490dc;
+    background-color: #880000;
     color: #fff;
-    border-radius: 6px;
     text-decoration: none;
     transition: background 0.3s;
 }
 
 .btn:hover {
-    background-color: #2779bd;
+    background-color: #bd8127;
 }
 
 /* Formularis */

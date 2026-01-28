@@ -19,7 +19,7 @@ class JugadoraController extends Controller
     public function create()
     {
         $posicions = ['Davanter', 'Defensa', 'Porter', 'Migcampista'];
-        $equips = Equip::all(); // Si vols un select amb equips existents
+        $equips = Equip::all();
 
         return view('jugadores.create', compact('posicions', 'equips'));
     }

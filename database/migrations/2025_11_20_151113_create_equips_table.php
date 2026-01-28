@@ -13,7 +13,7 @@ class CreateEquipsTable extends Migration
             $table->string('nom')->index();
             $table->string('ciutat')->nullable();
             $table->string('lliga')->nullable();
-            $table->string('escut')->nullable(); // fitxer imatge opcional
+            $table->string('escut')->nullable();
             $table->timestamps();
         });
     }
