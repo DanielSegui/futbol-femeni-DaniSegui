@@ -2,55 +2,75 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreEquipRequest;
-use App\Http\Requests\UpdateEquipRequest;
-use App\Models\Equip;
-use App\Models\Estadi;
 use App\Services\EquipService;
+use App\Http\Requests\StoreEquipRequest;
+use App\Models\Equip;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
-class EquipController extends Controller {
-    public function __construct(private EquipService $servei) {}
+use Illuminate\Support\Facades\Gate;
 
-    // GET /equips
-    public function index() {
-        return view('equips.index', ['equips' => $this->servei->llistar()]);
+class EquipController extends Controller
+{
+    protected $equipService;
+
+    public function __construct(EquipService $equipService)
+    {
+        $this->equipService = $equipService;
     }
 
-    // GET /equips/create
-    public function create() {
-        $estadis = Estadi::all();
-        return view('equips.create',compact('estadis'));
-    }
-    // POST /equips
-    public function store(StoreEquipRequest $request) {
-        $this->servei->guardar($request->validated());
-        return redirect()->route('equips.index');
+    public function index()
+    {
+        $equips = $this->equipService->all();
+        return view('equips.index', compact('equips'));
     }
 
-    // GET /equips/{id}
-    public function show(Equip $equip) {
-        return view('equips.show', [
-            'equip' => $equip,
-            'jugadores' => $equip->jugadores
-        ]);
+    public function show($id)
+    {
+        $equip = $this->equipService->find($id);
+        $partitsJugats = $equip->partitsLocal->whereNotNull('resultat')
+            ->merge($equip->partitsVisitant->whereNotNull('resultat'));
+
+        $partitsPendents = $equip->partitsLocal->whereNull('resultat')
+            ->merge($equip->partitsVisitant->whereNull('resultat'));
+
+        return view('equips.show', compact('equip', 'partitsJugats', 'partitsPendents'));
     }
 
-    // GET /equips/{id}/edit
-    public function edit(Equip $equip) {
+    public function create()
+    {
+        return view('equips.create');
+    }
+
+    public function store(StoreEquipRequest $request)
+    {
+        $this->equipService->create($request->validated());
+
+        return redirect()->route('equips.index')->with('success', 'Equip creat correctament.');
+    }
+
+    public function edit(Equip $equip)
+    {
+        // Verifica si el usuario tiene permiso para 'update' este equipo
+        Gate::authorize('update', $equip);
+
         return view('equips.edit', compact('equip'));
     }
 
-    // PUT /equips/{id}/edit
-    public function update(UpdateEquipRequest $request, Equip $equip) {
-        $this->servei->actualitzar($equip->id, $request->validated());
-        return redirect()->route('equips.index')->with('ok', 'Equip actualitzat');
-    }
-    
+    public function update(StoreEquipRequest $request, Equip $equip) // O UpdateEquipRequest si lo tienes
+    {
+        Gate::authorize('update', $equip);
 
-    // DELETE /equips/{id}
-    public function destroy($id) {
-        $this->servei->eliminar($id);
-        return redirect()->route('equips.index');
+        // ... tu lógica de actualización existente ...
+        $this->equipService->update($equip->id, $request->validated());
+
+        return redirect()->route('equips.index')->with('success', 'Equip actualitzat.');
+    }
+
+    public function destroy(Equip $equip)
+    {
+        Gate::authorize('delete', $equip);
+
+        $this->equipService->delete($equip->id);
+
+        return redirect()->route('equips.index')->with('success', 'Equip eliminat.');
     }
 }

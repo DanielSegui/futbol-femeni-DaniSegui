@@ -2,52 +2,87 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreJugadoraRequest;
-use App\Http\Requests\UpdateJugadoraRequest;
-use App\Models\Equip;
-use App\Models\Estadi;
 use App\Models\Jugadora;
-use App\Services\JugadoraService;
+use App\Models\Equip;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
-class JugadoraController extends Controller {
-    public function __construct(private JugadoraService $servei) {}
+use Illuminate\Support\Facades\Auth; // Importante para saber quién está logueado
 
-    // GET /jugadores
-    public function index() {
-        return view('jugadores.index', ['jugadores' => $this->servei->llistar()]);
+class JugadoraController extends Controller
+{
+    public function index()
+    {
+        $jugadores = Jugadora::with('equip')->get();
+        return view('jugadores.index', compact('jugadores'));
     }
 
-    // GET /jugadores/create
-    public function create() {
-        $jugadores = Jugadora::all();
-        return view('jugadores.create',compact('jugadores'));
-    }
-    // POST /jugadores
-    public function store(StoreJugadoraRequest $request) {
-        $this->servei->guardar($request->validated());
-        return redirect()->route('jugadores.index');
+    public function create()
+    {
+        $user = Auth::user();
+
+        // Si es Manager, solo mostramos su equipo. Si es Admin, todos.
+        if ($user->role === 'manager' && $user->team_id) {
+            $equips = Equip::where('id', $user->team_id)->get();
+        } else {
+            $equips = Equip::all();
+        }
+
+        // Definimos las posiciones para el desplegable
+        $posicions = ['Portera', 'Defensa', 'Migcampista', 'Davantera'];
+
+        return view('jugadores.create', compact('equips', 'posicions'));
     }
 
-    // GET /jugadores/{id}
-    public function show(Jugadora $jugadora) {
-        return view('jugadores.show', compact('jugadora'));
+    public function store(Request $request)
+    {
+        // Si tienes JugadoraRequest úsalo aquí: public function store(JugadoraRequest $request)
+        $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+            'posicio' => 'required|string|in:Portera,Defensa,Migcampista,Davantera',
+            'equip_id' => 'required|exists:equips,id',
+        ]);
+
+        Jugadora::create($validated);
+
+        return redirect()->route('jugadores.index')->with('success', 'Jugadora creada correctament.');
     }
 
-    // GET /jugadores/{id}/edit
-    public function edit(Jugadora $jugadora) {
-        return view('jugadores.edit', compact('jugadora'));
+    public function edit(Jugadora $jugadora)
+    {
+        $user = Auth::user();
+
+        // Control de seguridad extra: Manager solo edita sus jugadoras
+        if ($user->role === 'manager' && $user->team_id !== $jugadora->equip_id) {
+            abort(403, 'No pots editar jugadores d\'altres equips.');
+        }
+
+        if ($user->role === 'manager' && $user->team_id) {
+            $equips = Equip::where('id', $user->team_id)->get();
+        } else {
+            $equips = Equip::all();
+        }
+
+        $posicions = ['Portera', 'Defensa', 'Migcampista', 'Davantera'];
+
+        return view('jugadores.edit', compact('jugadora', 'equips', 'posicions'));
     }
 
-    // PUT /jugadores/{id}/edit
-    public function update(Request $request, Jugadora $jugadora) {
-        $this->servei->actualitzar($jugadora, $request->validated());
-        return redirect()->route('jugadores.index')->with('ok', 'Jugadora actualitzada');
+    public function update(Request $request, Jugadora $jugadora)
+    {
+        $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+            'posicio' => 'required|string|max:255',
+            'equip_id' => 'required|exists:equips,id',
+        ]);
+
+        $jugadora->update($validated);
+
+        return redirect()->route('jugadores.index')->with('success', 'Jugadora actualitzada correctament.');
     }
 
-    // DELETE /jugadores/{id}
-    public function destroy($id) {
-        $this->servei->eliminar($id);
-        return redirect()->route('jugadores.index');
+    public function destroy(Jugadora $jugadora)
+    {
+        // La Policy ya protege esto, pero no está de más
+        $jugadora->delete();
+        return redirect()->route('jugadores.index')->with('success', 'Jugadora eliminada correctament.');
     }
 }
