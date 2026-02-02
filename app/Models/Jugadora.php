@@ -4,26 +4,31 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
-/**
- * Model JUGADORA
- */
 class Jugadora extends Model
 {
     use HasFactory;
 
-    protected $table = "jugadores";
+    protected $table = 'jugadores';
 
-    /**
-     * @var string[]
-     */
-    protected $fillable = ['nom','equip_id', 'data_naixement', 'dorsal','foto','posicio' ];
+    protected $fillable = [
+        'nom',
+        'cognoms',
+        'dorsal',
+        'data_naixement',
+        'foto',
+        'posicio',
+        'equip_id',
+    ];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function equip()
     {
         return $this->belongsTo(Equip::class);
+    }
+
+    public function getEdatAttribute()
+    {
+        return $this->data_naixement ? Carbon::parse($this->data_naixement)->age : null;
     }
 }

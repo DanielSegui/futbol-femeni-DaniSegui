@@ -5,28 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * MODEL ESTADI
- */
 class Estadi extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nom', 'capacitat' ];
+    protected $fillable = [
+        'nom',
+        'ciutat',
+        'capacitat',
+        'equip_principal_id',
+    ];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function equips()
+    public function equipPrincipal()
     {
-        return $this->hasMany(Equip::class);
+        return $this->belongsTo(Equip::class, 'equip_principal_id');
     }
 
-    /**
-    * @return \Illuminate\Database\Eloquent\Relations\HasMany
-    */
     public function partits()
     {
-        return $this->hasMany(Partit::class,'estadi_id');
+        return $this->hasMany(Partit::class);
     }
 }
