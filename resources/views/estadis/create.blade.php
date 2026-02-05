@@ -1,27 +1,36 @@
-@extends('layouts.app')
-@section('title', 'Afegir nou equip')
+@extends('layouts.equip')
 
 @section('content')
-<h1 class="text-2xl font-bold mb-4">Afegir nou estadi</h1>
+<div class="max-w-2xl mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-200">Nou Estadi</h2>
 
-@if ($errors->any())
-  <div class="bg-red-100 text-red-700 p-2 mb-4">
-    <ul>
-      @foreach ($errors->all() as $error) <li>{{ $error }}</li> @endforeach
-    </ul>
-  </div>
-@endif
+    <form action="{{ route('estadis.store') }}" method="POST">
+        @csrf
 
-<form action="{{ route('estadis.store') }}" method="POST" class="space-y-4">
-  @csrf
-  <div>
-    <label for="nom" class="block font-bold">Nom:</label>
-    <input type="text" name="nom" id="nom" value="{{ old('nom') }}" class="border p-2 w-full">
-  </div>
-  <div>
-    <label for="capacitat" class="block font-bold">Capacitat:</label>
-    <input type="text" name="capacitat" id="capacitat" value="{{ old('capacitat') }}" class="border p-2 w-full">
-  </div>
-  <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Afegir</button>
-</form>
+        {{-- Nom --}}
+        <div class="mb-4">
+            <label for="nom" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nom de l'Estadi</label>
+            <input type="text" name="nom" id="nom" value="{{ old('nom') }}" class="w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded-lg shadow-sm" required>
+        </div>
+
+        {{-- Ciutat --}}
+        <div class="mb-4">
+            <label for="ciutat" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ciutat</label>
+            <input type="text" name="ciutat" id="ciutat" value="{{ old('ciutat') }}" class="w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded-lg shadow-sm" required>
+        </div>
+
+        {{-- Capacitat --}}
+        <div class="mb-4">
+            <label for="capacitat" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Capacitat</label>
+            <input type="number" name="capacitat" id="capacitat" value="{{ old('capacitat') }}" class="w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded-lg shadow-sm" required>
+        </div>
+
+        <div class="flex items-center justify-between mt-6">
+            <a href="{{ route('estadis.index') }}" class="text-gray-600 dark:text-gray-400 hover:text-gray-900">Cancel·lar</a>
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow">
+                Guardar Estadi
+            </button>
+        </div>
+    </form>
+</div>
 @endsection

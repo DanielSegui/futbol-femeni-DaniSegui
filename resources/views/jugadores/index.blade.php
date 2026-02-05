@@ -1,35 +1,64 @@
-@extends('layouts.app')
-@section('title', "Guia de Jugadores")
+@extends('layouts.equip')
 
 @section('content')
-<h1 class="text-3xl font-bold text-blue-800 mb-6">Guia de Jugadores</h1>
+<div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">Jugadores</h2>
 
-@if (session('success'))
-  <div class="bg-green-100 text-green-700 p-2 mb-4">{{ session('success') }}</div>
-@endif
+    @can('create', App\Models\Jugadora::class)
+    <a href="{{ route('jugadores.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow">
+        + Nova jugadora
+    </a>
+    @endcan
+</div>
 
-<p class="mb-4">
-  <a href="{{ route('jugadores.create') }}" class="bg-blue-600 text-white px-3 py-2 rounded">Nova Jugadora</a>
-</p>
+<div class="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
+    <table class="min-w-full leading-normal">
+        <thead>
+            <tr>
+                <th class="px-5 py-3 border-b-2 border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Nom</th>
+                <th class="px-5 py-3 border-b-2 border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Posició</th>
+                <th class="px-5 py-3 border-b-2 border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Equip</th>
+                <th class="px-5 py-3 border-b-2 border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-center text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Accions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse ($jugadores as $jugadora)
+            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-150 ease-in-out">
+                <td class="px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm font-medium">
+                    {{ $jugadora->nom }}
+                </td>
+                <td class="px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
+                    {{ $jugadora->posicio }}
+                </td>
+                <td class="px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
+                    {{ $jugadora->equip ? $jugadora->equip->nom : '-' }}
+                </td>
+                <td class="px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-center">
+                    <div class="flex justify-center space-x-3">
+                        {{-- NOMÉS SI TENS PERMÍS PER EDITAR (Admin o Manager del mateix equip) --}}
+                        @can('update', $jugadora)
+                        <a href="{{ route('jugadores.edit', $jugadora) }}" class="text-yellow-600 hover:text-yellow-900 font-bold">Editar</a>
+                        @endcan
 
-<table class="w-full border-collapse border border-gray-300">
-  <thead class="bg-gray-200">
-  <tr>
-    <th class="border border-gray-300 p-2">Nom</th>
-    <th class="border border-gray-300 p-2">Equip</th>
-    <th class="border border-gray-300 p-2">Posicio</th>    
-  </tr>
-  </thead>
-  <tbody>
-  @foreach($jugadores as $key => $jugadora)
-    <tr class="hover:bg-gray-100">
-      <td class="border border-gray-300 p-2">
-        <a href="{{ route('jugadores.show', $key) }}" class="text-blue-700 hover:underline">{{ $jugadora['nom'] }}</a>
-      </td>
-      <td class="border border-gray-300 p-2">{{ $jugadora['equip'] }}</td>
-      <td class="border border-gray-300 p-2">{{ $jugadora['posicio'] }}</td>
-    </tr>
-  @endforeach
-  </tbody>
-</table>
+                        {{-- NOMÉS SI TENS PERMÍS PER ESBORRAR --}}
+                        @can('delete', $jugadora)
+                        <form action="{{ route('jugadores.destroy', $jugadora) }}" method="POST" class="inline-block" onsubmit="return confirm('Segur que vols eliminar aquesta jugadora?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-red-600 hover:text-red-900 font-bold">Eliminar</button>
+                        </form>
+                        @endcan
+                    </div>
+                </td>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="4" class="px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-center text-gray-500">
+                    No hi ha jugadores.
+                </td>
+            </tr>
+            @endforelse
+        </tbody>
+    </table>
+</div>
 @endsection
