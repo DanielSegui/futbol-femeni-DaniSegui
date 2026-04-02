@@ -1,20 +1,39 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="ca">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>@yield('title','Guia de futbol femení')</title>
-  @vite(['resources/css/app.css'])
+    <meta charset="UTF-8">
+    <title>Futbol Femení</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-sans bg-gray-100 text-gray-900">
-  <header class="bg-blue-800 text-white p-4">
+<body>
+    <header class="topbar">
+        <h1>Guia de Futbol Femení</h1>
+    </header>
+
     @include('partials.menu')
-  </header>
-  <main class="container mx-auto p-6">
-    @yield('content')
-  </main>
-  <footer class="bg-blue-800 text-white text-center p-4">
-    <p>&copy; 2025 Guia de Futbol Femení</p>
-  </footer>
+
+    <main class="container">
+        {{-- Missatge d'èxit (flash) --}}
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        {{-- Errors de validació --}}
+        @if ($errors->any())
+            <div class="alert alert-error">
+                <p><strong>Hi ha errors al formulari:</strong></p>
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        @yield('content')
+    </main>
 </body>
 </html>

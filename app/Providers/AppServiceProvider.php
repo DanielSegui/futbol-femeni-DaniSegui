@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Repositories\EquipRepositoryInterface;
+use App\Repositories\Eloquent\EquipRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -11,9 +13,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(EquipRepositoryInterface::class, EquipRepository::class);
     }
-
     /**
      * Bootstrap any application services.
      */

@@ -2,45 +2,45 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Equip;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 
 class EquipController extends Controller
 {
-    public $equips = [
-        ['nom' => 'Barça Femení',      'estadi' => 'Camp Nou',               'titols' => 30],
-        ['nom' => 'Atlètic de Madrid',  'estadi' => 'Cívitas Metropolitano',  'titols' => 10],
-        ['nom' => 'Real Madrid Femení', 'estadi' => 'Alfredo Di Stéfano',     'titols' => 5],
-    ];
-
     public function index()
     {
-        $equips = Session::get('equips', $this->equips);
+        $equips = Equip::all();
         return view('equips.index', compact('equips'));
     }
 
-    public function show(int $id)
+    public function show($id)
     {
-        $equips = Session::get('equips', $this->equips);
-        abort_if(!isset($equips[$id]), 404);
-        $equip = $equips[$id];
-        return view('equips.show', compact('equip'));
+        $equip = Equip::findOrFail($id);
+
+        $partitsJugats = $equip->partitsLocal->whereNotNull('resultat')
+            ->merge($equip->partitsVisitant->whereNotNull('resultat'));
+
+        $partitsPendents = $equip->partitsLocal->whereNull('resultat')
+            ->merge($equip->partitsVisitant->whereNull('resultat'));
+
+        return view('equips.show', compact('equip', 'partitsJugats', 'partitsPendents'));
     }
 
-    public function create() { return view('equips.create'); }
+    public function create()
+    {
+        return view('equips.create');
+    }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'nom'    => 'required|min:3',
-            'estadi' => 'required',
-            'titols' => 'required|integer|min:0',
+        $request->validate([
+            'nom' => 'required|string|max:255',
+            'ciutat' => 'nullable|string|max:255',
+            'lliga' => 'nullable|string|max:255',
         ]);
 
-        $equips = Session::get('equips', $this->equips);
-        $equips[] = $validated;
-        Session::put('equips', $equips);
+        Equip::create($request->only('nom', 'ciutat', 'lliga'));
 
-        return redirect()->route('equips.index')->with('success', 'Equip afegit correctament!');
+        return redirect()->route('equips.index')->with('success', 'Equip creat correctament.');
     }
 }

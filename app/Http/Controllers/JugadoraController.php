@@ -2,45 +2,39 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Jugadora;
+use App\Models\Equip;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 
-class JugadoraController extends Controller 
+class JugadoraController extends Controller
 {
-     public $jugadores = [
-        ['nom' => 'Alexia Putellas', 'equip' => 'Barça Femení', 'posicio' => 'Migcampista'],
-        ['nom' => 'Esther González',  'equip' => 'Atlètic de Madrid',  'posicio' => 'Davantera'],
-        ['nom' => 'Misa Rodríguez',  'equip' => 'Real Madrid Femení',  'posicio' => 'Portera'],
-     ];
-
     public function index()
     {
-        $jugadores = Session::get('jugadores', $this->jugadores);
+        // Agafa totes les jugadores amb l'equip relacionat
+        $jugadores = Jugadora::with('equip')->get();
+
         return view('jugadores.index', compact('jugadores'));
     }
 
-    public function show(int $id)
+    public function create()
     {
-        $jugadores = Session::get('jugadores', $this->jugadores);
-        abort_if(!isset($jugadores[$id]), 404);
-        $jugadora = $jugadores[$id];
-        return view('jugadores.show', compact('jugadora'));
-    }
+        $posicions = ['Davanter', 'Defensa', 'Porter', 'Migcampista'];
+        $equips = Equip::all();
 
-    public function create() { return view('jugadores.create'); }
+        return view('jugadores.create', compact('posicions', 'equips'));
+    }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'nom'      => 'required|min:3',
-            'equip'    => 'required|min:2',
-            'posicio'  => 'required|in:Portera,Defensa,Migcampista,Davantera',
+        $data = $request->validate([
+            'nom' => 'required|string|max:255',
+            'cognoms' => 'required|string|max:255', // afegit
+            'equip_id' => 'required|exists:equips,id',
+            'posicio' => 'required|string',
         ]);
 
-        $jugadores = Session::get('jugadores', $this->jugadores);
-        $jugadores[] = $validated;
-        Session::put('jugadores', $jugadores);
+        Jugadora::create($data);
 
-        return redirect()->route('jugadores.index')->with('success', 'Jugadora afegida correctament!');
+        return redirect()->route('jugadores.index')->with('success', 'Jugadora creada!');
     }
 }

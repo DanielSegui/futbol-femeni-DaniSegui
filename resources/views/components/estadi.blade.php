@@ -1,6 +1,8 @@
-<div class="estadi border rounded-lg shadow-md p-4 bg-white">
-  <h2 class="text-xl font-bold text-blue-800">{{ $nom }}</h2>
-  <p><strong>Ciutat:</strong> {{ $ciutat }}</p>
-  <p><strong>Capacitat:</strong> {{ $capacitat }}</p>
-  <p><strong>Equip:</strong> {{ $equip }}</p>
-</div>
+@props(['estadi'])
+
+<tr>
+    <td>{{ $estadi['nom'] ?? '-' }}</td>
+    <td>{{ $estadi['ciutat'] ?? '-' }}</td>
+    <td>{{ $estadi['capacitat'] ?? '-' }}</td>
+    <td>{{ $estadi['equip_principal'] ?? '-' }}</td>
+</tr>

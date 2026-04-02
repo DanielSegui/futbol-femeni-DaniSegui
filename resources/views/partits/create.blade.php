@@ -1,36 +1,41 @@
 @extends('layouts.app')
-@section('title', 'Afegir nou partit')
 
 @section('content')
-<h1 class="text-2xl font-bold mb-4">Afegir nou partit</h1>
+<h2>Nou partit</h2>
 
-@if ($errors->any())
-  <div class="bg-red-100 text-red-700 p-2 mb-4">
-    <ul>
-      @foreach ($errors->all() as $error) <li>{{ $error }}</li> @endforeach
-    </ul>
-  </div>
-@endif
+<form action="{{ route('partits.store') }}" method="POST" class="form">
+    @csrf
 
-<form action="{{ route('partits.store') }}" method="POST" class="space-y-4">
-  @csrf
-  <div>
-    <label for="local" class="block font-bold">Local:</label>
-    <input type="text" name="local" id="local" value="{{ old('local') }}" class="border p-2 w-full">
-  </div>
-  <div>
-    <label for="visitant" class="block font-bold">Visitant:</label>
-    <input type="text" name="visitant" id="visitant" value="{{ old('visitant') }}" class="border p-2 w-full">
-  </div>
-  <div>
-    <label for="data" class="block font-bold">Data:</label>
-    <input type="text" name="data" id="data" value="{{ old('data') }}" class="border p-2 w-full">
-  </div>
-  <div>
-    <label for="resultat" class="block font-bold">Resultat:</label>
-    <input type="text" name="resultat" id="resultat" value="{{ old('resultat') }}" class="border p-2 w-full">
-  </div>
-  <div>
-  <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Afegir</button>
+    <label for="local_id">Equip local</label>
+    <select name="local_id" id="local_id" required>
+        <option value="">-- Selecciona equip local --</option>
+        @foreach($equips as $equip)
+        <option value="{{ $equip->id }}" @selected(old('local_id')==$equip->id)>{{ $equip->nom }}</option>
+        @endforeach
+    </select>
+
+    <label for="visitant_id">Equip visitant</label>
+    <select name="visitant_id" id="visitant_id" required>
+        <option value="">-- Selecciona equip visitant --</option>
+        @foreach($equips as $equip)
+        <option value="{{ $equip->id }}" @selected(old('visitant_id')==$equip->id)>{{ $equip->nom }}</option>
+        @endforeach
+    </select>
+
+    <label for="estadi_id">Estadi</label>
+    <select name="estadi_id" id="estadi_id">
+        <option value="">-- Selecciona estadi (opcional) --</option>
+        @foreach($estadios as $estadi)
+        <option value="{{ $estadi->id }}" @selected(old('estadi_id')==$estadi->id)>{{ $estadi->nom }}</option>
+        @endforeach
+    </select>
+
+    <label for="data">Data</label>
+    <input type="date" name="data" id="data" value="{{ old('data') }}" required>
+
+    <label for="resultat">Resultat (opcional, format X-Y)</label>
+    <input type="text" name="resultat" id="resultat" value="{{ old('resultat') }}">
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
 </form>
 @endsection
